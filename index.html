@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mon Sanctuaire d'Étude 🦢🌷</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Playfair Display & Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Quicksand"', 'sans-serif'],
+          },
+          colors: {
+            blush: {
+              50: '#FFF8FA',
+              100: '#FFEFF4',
+              200: '#FFD6E4',
+              300: '#FFB3CD',
+              400: '#FF85B0',
+              500: '#F45B93',
+              600: '#D93B75',
+              700: '#B5265B',
+            },
+            rosegold: {
+              300: '#E8B4B8',
+              400: '#D8969C',
+              500: '#C47A81',
+            },
+            cream: '#FFFDFD',
+          },
+          boxShadow: {
+            'soft': '0 10px 30px -5px rgba(244, 91, 147, 0.12)',
+            'glow': '0 0 20px rgba(255, 133, 176, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom subtle scrollbar & background pattern */
+    body {
+      background-color: #FFF8FA;
+      background-image: 
+        radial-gradient(at 15% 15%, rgba(255, 214, 228, 0.55) 0px, transparent 50%),
+        radial-gradient(at 85% 20%, rgba(255, 239, 244, 0.8) 0px, transparent 50%),
+        radial-gradient(at 50% 85%, rgba(255, 179, 205, 0.35) 0px, transparent 55%);
+      background-attachment: fixed;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 214, 228, 0.7);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FFF8FA;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #FFB3CD;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF85B0;
+    }
+
+    /* Equalizer animation for Lo-Fi mode */
+    @keyframes bounceBar {
+      0%, 100% { height: 4px; }
+      50% { height: 16px; }
+    }
+    .eq-bar {
+      width: 3px;
+      background-color: #F45B93;
+      border-radius: 999px;
+      animation: bounceBar 0.9s ease-in-out infinite;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.15s; }
+
+    /* Circular SVG Progress */
+    .progress-ring__circle {
+      transition: stroke-dashoffset 0.5s ease-in-out;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-700 min-h-screen pb-12 selection:bg-blush-200 selection:text-blush-700">
+
+  <!-- Toast Notification Container (Replaces alert) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Main Wrapper -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+
+    <!-- ================= HEADER / GREETING ================= -->
+    <header class="glass-card rounded-3xl p-6 sm:p-8 shadow-soft mb-8 relative overflow-hidden">
+      <!-- Decorative floating subtle blobs -->
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-blush-200/40 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 left-10 w-36 h-36 bg-blush-300/30 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blush-100 border border-blush-200 text-blush-600 text-xs sm:text-sm font-semibold mb-3">
+            <span id="current-date" class="capitalize">Chargement de la date...</span>
+            <span>•</span>
+            <span>Mode Productivité Douce ✨</span>
+          </div>
+          <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-800 tracking-tight">
+            Mon Sanctuaire d'Étude <span class="inline-block hover:scale-110 transition-transform">🦢🌷</span>
+          </h1>
+          <p id="motivational-quote" class="mt-2.5 text-sm sm:text-base text-slate-500 italic font-medium">
+            « La discipline est la plus belle forme d'amour-propre. Tu vas tout réussir aujourd'hui ! »
+          </p>
+        </div>
+
+        <!-- Quick Daily Summary Pill -->
+        <div class="flex items-center gap-3 self-start md:self-center bg-white/80 border border-blush-200 rounded-2xl p-3.5 shadow-sm">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blush-400 to-blush-500 text-white flex items-center justify-center text-2xl shadow-glow">
+            🦢
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-blush-500">Objectif du jour</p>
+            <p id="header-progress-text" class="text-base sm:text-lg font-bold text-slate-800">0% accompli</p>
+          </div>
+          <button onclick="newQuote()" title="Nouvelle citation" class="ml-2 p-2.5 rounded-xl bg-blush-50 hover:bg-blush-100 text-blush-500 transition-colors">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= MAIN BENTO GRID ================= -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+
+      <!-- LEFT COLUMN (5 cols on lg): Pomodoro Timer + Self-Care Routine -->
+      <div class="lg:col-span-5 flex flex-col gap-6 sm:gap-8">
+
+        <!-- 1. POMODORO / STUDY TIMER (Chrono d'Étude 🎧) -->
+        <section class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft flex flex-col items-center text-center relative">
+          <div class="w-full flex items-center justify-between mb-4">
+            <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+              <span>Chrono d'Étude</span>
+              <span>🎧</span>
+            </h2>
+
+            <!-- Ambient Lo-Fi Vibe Toggle -->
+            <button id="lofi-toggle" onclick="toggleLofi()" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-blush-100/80 text-blush-600 border border-blush-200 hover:bg-blush-200/70 transition-all">
+              <div id="eq-visualizer" class="hidden items-end gap-0.5 h-4">
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+              </div>
+              <i id="lofi-icon" data-lucide="headphones" class="w-3.5 h-3.5"></i>
+              <span id="lofi-label">Ambiance Pluie Douce</span>
+            </button>
+          </div>
+
+          <!-- Mode Selector Pills -->
+          <div class="grid grid-cols-3 gap-1.5 w-full bg-blush-100/70 p-1.5 rounded-2xl mb-6 border border-blush-200/60">
+            <button onclick="setTimerMode('focus', 25)" id="btn-mode-focus" class="timer-mode-btn py-2 px-2 rounded-xl text-xs sm:text-sm font-bold bg-white text-blush-600 shadow-sm transition-all">
+              Focus 25m
+            </button>
+            <button onclick="setTimerMode('short', 5)" id="btn-mode-short" class="timer-mode-btn py-2 px-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-500 hover:text-blush-600 transition-all">
+              Pause 5m
+            </button>
+            <button onclick="setTimerMode('long', 15)" id="btn-mode-long" class="timer-mode-btn py-2 px-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-500 hover:text-blush-600 transition-all">
+              Repos 15m
+            </button>
+          </div>
+
+          <!-- Circular Timer Display -->
+          <div class="relative w-52 h-52 sm:w-56 sm:h-56 flex items-center justify-center mb-6">
+            <svg class="w-full h-full" viewBox="0 0 120 120">
+              <!-- Background Circle -->
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#FFEFF4" stroke-width="8" />
+              <!-- Progress Circle -->
+              <circle id="timer-ring" class="progress-ring__circle" cx="60" cy="60" r="52" fill="none" stroke="url(#pinkGradient)" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.72" stroke-dashoffset="0" />
+              <defs>
+                <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FF85B0" />
+                  <stop offset="100%" stop-color="#F45B93" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="timer-status-badge" class="text-xs font-bold uppercase tracking-widest text-blush-500 mb-1">Prête ?</span>
+              <span id="timer-display" class="font-serif text-4xl sm:text-5xl font-bold text-slate-800 tracking-tight">25:00</span>
+              <span id="sessions-count" class="text-xs font-medium text-slate-400 mt-1.5">0 session terminée 🌷</span>
+            </div>
+          </div>
+
+          <!-- Timer Controls -->
+          <div class="flex items-center justify-center gap-3 w-full">
+            <button id="timer-start-btn" onclick="toggleTimer()" class="flex-1 py-3 px-6 rounded-2xl bg-gradient-to-r from-blush-400 to-blush-500 hover:from-blush-500 hover:to-blush-600 text-white font-bold text-sm sm:text-base shadow-glow transition-all flex items-center justify-center gap-2 active:scale-95">
+              <i id="timer-play-icon" data-lucide="play" class="w-5 h-5 fill-current"></i>
+              <span id="timer-play-text">Commencer</span>
+            </button>
+            <button onclick="resetTimer()" title="Réinitialiser" class="p-3.5 rounded-2xl bg-blush-100 hover:bg-blush-200 text-blush-600 transition-all active:scale-95">
+              <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- 2. SELF-CARE & GLOW-UP ROUTINE (Ma Routine & Bien-être 🫦) -->
+        <section class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <span>Ma Routine & Bien-être</span>
+                <span>🫦</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Prendre soin de soi pour mieux réviser</p>
+            </div>
+            <span id="habits-badge" class="px-3 py-1 rounded-full bg-blush-100 text-blush-600 text-xs font-bold">
+              0 / 5
+            </span>
+          </div>
+
+          <!-- Habits Checklist -->
+          <div id="habits-list" class="space-y-2.5">
+            <!-- Populated via JS -->
+          </div>
+
+          <!-- Add Custom Habit Mini Form -->
+          <form onsubmit="addHabit(event)" class="mt-4 flex gap-2">
+            <input id="habit-input" type="text" placeholder="Ajouter une habitude douce..." class="flex-1 px-4 py-2.5 rounded-2xl bg-white/90 border border-blush-200 text-sm focus:outline-none focus:border-blush-400 focus:ring-2 focus:ring-blush-200/50 placeholder:text-slate-400" />
+            <button type="submit" class="px-4 py-2.5 rounded-2xl bg-blush-100 hover:bg-blush-200 text-blush-600 font-bold text-sm transition-colors">
+              +
+            </button>
+          </form>
+        </section>
+
+        <!-- 3. SPIRITUALITY: DAILY PRAYERS & QURAN (Ma Spiritualité : Prières & Coran 🦢🌷) -->
+        <section class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <span>Prières & Coran</span>
+                <span>🦢🌷</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Nourrir son âme avec sérénité</p>
+            </div>
+            <span id="prayers-badge" class="px-3 py-1 rounded-full bg-blush-100 text-blush-600 text-xs font-bold">
+              0 / 5 Prières
+            </span>
+          </div>
+
+          <!-- 5 Daily Prayers Grid -->
+          <div class="mb-5">
+            <p class="text-xs font-bold uppercase tracking-wider text-blush-500 mb-2.5">Les 5 Prières du Jour</p>
+            <div id="prayers-grid" class="grid grid-cols-5 gap-1.5 sm:gap-2">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Daily Quran Reading Tracker -->
+          <div class="bg-blush-50/80 border border-blush-200/80 rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-blush-600 flex items-center gap-1.5">
+                <span>Lecture du Coran (Wird)</span>
+                <span>📖</span>
+              </span>
+              <button id="quran-done-btn" onclick="toggleQuranDone()" class="px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all bg-white text-blush-600 border-blush-200 hover:bg-blush-100">
+                Marquer lu ✓
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-500 mb-1">Sourate / Juzz actuel</label>
+                <input id="quran-sourate" type="text" oninput="updateQuranData()" placeholder="Ex: Sourate Al-Kahf..." class="w-full px-3 py-2 rounded-xl bg-white border border-blush-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-blush-400" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-500 mb-1">Pages lues aujourd'hui</label>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="adjustQuranPages(-1)" class="w-8 h-8 rounded-xl bg-white border border-blush-200 text-blush-600 font-bold hover:bg-blush-100 transition-colors">-</button>
+                  <input id="quran-pages" type="number" min="0" oninput="updateQuranData()" class="w-full text-center px-2 py-1.5 rounded-xl bg-white border border-blush-200 text-xs font-bold text-slate-700 focus:outline-none focus:border-blush-400" />
+                  <button type="button" onclick="adjustQuranPages(1)" class="w-8 h-8 rounded-xl bg-blush-400 text-white font-bold hover:bg-blush-500 transition-colors">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN (7 cols on lg): Daily To-Do List + Study & Revision Tracker -->
+      <div class="lg:col-span-7 flex flex-col gap-6 sm:gap-8">
+
+        <!-- 3. DAILY TO-DO LIST (Mes Tâches du Jour 🌷) -->
+        <section class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div>
+              <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <span>Mes Tâches du Jour</span>
+                <span>🌷</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Organise ta journée étape par étape</p>
+            </div>
+
+            <!-- Filter Pills -->
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button onclick="setTaskFilter('Toutes')" class="task-filter-btn active px-3 py-1 rounded-full text-xs font-bold bg-blush-500 text-white transition-all">Toutes</button>
+              <button onclick="setTaskFilter('Révision')" class="task-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-blush-100 text-blush-600 hover:bg-blush-200 transition-all">Révision</button>
+              <button onclick="setTaskFilter('Devoirs')" class="task-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-blush-100 text-blush-600 hover:bg-blush-200 transition-all">Devoirs</button>
+              <button onclick="setTaskFilter('Personnel')" class="task-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-blush-100 text-blush-600 hover:bg-blush-200 transition-all">Personnel</button>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mb-5">
+            <div class="flex justify-between text-xs font-semibold mb-1.5">
+              <span class="text-slate-500">Progression des tâches</span>
+              <span id="todo-progress-label" class="text-blush-600">0%</span>
+            </div>
+            <div class="w-full h-2.5 bg-blush-100 rounded-full overflow-hidden">
+              <div id="todo-progress-bar" class="h-full bg-gradient-to-r from-blush-300 via-blush-400 to-blush-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Add Task Form -->
+          <form onsubmit="addTask(event)" class="flex flex-col sm:flex-row gap-2.5 mb-5">
+            <input id="task-input" type="text" required placeholder="Écris une tâche à accomplir aujourd'hui..." class="flex-1 px-4 py-3 rounded-2xl bg-white/90 border border-blush-200 text-sm focus:outline-none focus:border-blush-400 focus:ring-2 focus:ring-blush-200/50 placeholder:text-slate-400" />
+            <div class="flex gap-2">
+              <select id="task-category" class="px-3.5 py-3 rounded-2xl bg-white/90 border border-blush-200 text-sm font-semibold text-slate-600 focus:outline-none focus:border-blush-400">
+                <option value="Révision">📚 Révision</option>
+                <option value="Devoirs">✍️ Devoirs</option>
+                <option value="Personnel">🎀 Personnel</option>
+                <option value="Routine">✨ Routine</option>
+              </select>
+              <button type="submit" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-blush-400 to-blush-500 hover:from-blush-500 hover:to-blush-600 text-white font-bold text-sm shadow-sm transition-all active:scale-95 whitespace-nowrap">
+                Ajouter
+              </button>
+            </div>
+          </form>
+
+          <!-- Tasks List -->
+          <ul id="tasks-list" class="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+            <!-- Populated via JS -->
+          </ul>
+        </section>
+
+        <!-- 4. STUDY & REVISION TRACKER / FLASH-NOTES (Mes Notes & Fiches de Révision 🦢) -->
+        <section class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+            <div>
+              <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <span>Mes Notes & Fiches de Révision</span>
+                <span>🦢</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Suis tes chapitres à mémoriser et tes résumés clés</p>
+            </div>
+            <span id="study-count-badge" class="self-start sm:self-center px-3 py-1 rounded-full bg-blush-100 text-blush-600 text-xs font-bold">
+              0 fiche
+            </span>
+          </div>
+
+          <!-- Add Study Topic / Flash-note Form -->
+          <form onsubmit="addStudyItem(event)" class="bg-blush-50/80 border border-blush-200/80 rounded-2xl p-4 mb-5 space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <input id="study-subject" type="text" required placeholder="Matière / Chapitre (ex: Biologie)" class="sm:col-span-2 px-3.5 py-2.5 rounded-xl bg-white border border-blush-200 text-sm focus:outline-none focus:border-blush-400" />
+              <select id="study-status" class="px-3.5 py-2.5 rounded-xl bg-white border border-blush-200 text-sm font-semibold text-slate-600 focus:outline-none focus:border-blush-400">
+                <option value="À faire">🌸 À faire</option>
+                <option value="En cours">🦢 En cours</option>
+                <option value="Maîtrisé">✨ Maîtrisé</option>
+              </select>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2.5">
+              <input id="study-note" type="text" placeholder="Note rapide, formule ou point clé à retenir..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-white border border-blush-200 text-sm focus:outline-none focus:border-blush-400" />
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-blush-500 hover:bg-blush-600 text-white font-bold text-sm transition-all active:scale-95">
+                Enregistrer la fiche
+              </button>
+            </div>
+          </form>
+
+          <!-- Study Cards Grid -->
+          <div id="study-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-h-80 overflow-y-auto pr-1">
+            <!-- Populated via JS -->
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Subtle Aesthetic Footer -->
+    <footer class="mt-10 text-center text-xs text-slate-400 font-medium">
+      Fait avec douceur pour tes sessions d'étude 🦢🌷🫦🎧 • Toutes tes données sont sauvegardées automatiquement.
+    </footer>
+
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // ---------------- STATE & LOCAL STORAGE ----------------
+    const STORAGE_KEYS = {
+      TASKS: 'sanctuaire_tasks_v1',
+      HABITS: 'sanctuaire_habits_v1',
+      STUDY: 'sanctuaire_study_v1',
+      SESSIONS: 'sanctuaire_sessions_v1',
+      PRAYERS: 'sanctuaire_prayers_v1',
+      QURAN: 'sanctuaire_quran_v1'
+    };
+
+    // Default initial data for a welcoming first experience
+// ... existing code ... -->
+    const defaultStudy = [
+      { id: 201, subject: 'Méthodologie & Résumé', status: 'En cours', note: 'Utiliser la technique Feynman : expliquer le cours avec des mots simples.' },
+      { id: 202, subject: 'Vocabulaire & Dates Clés', status: 'À faire', note: 'Faire 2 sessions Pomodoro de 25 min avec répétition espacée.' }
+    ];
+
+    const defaultPrayers = [
+      { id: 'fajr', name: 'Fajr', completed: false },
+      { id: 'dhuhr', name: 'Dhuhr', completed: false },
+      { id: 'asr', name: 'Asr', completed: false },
+      { id: 'maghrib', name: 'Maghrib', completed: false },
+      { id: 'isha', name: 'Isha', completed: false }
+    ];
+
+    const defaultQuran = {
+      sourate: 'Sourate Al-Mulk',
+      pages: 4,
+      completed: false
+    };
+
+    let tasks = JSON.parse(localStorage.getItem(STORAGE_KEYS.TASKS)) || defaultTasks;
+    let habits = JSON.parse(localStorage.getItem(STORAGE_KEYS.HABITS)) || defaultHabits;
+    let studyItems = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDY)) || defaultStudy;
+    let prayers = JSON.parse(localStorage.getItem(STORAGE_KEYS.PRAYERS)) || defaultPrayers;
+    let quranData = JSON.parse(localStorage.getItem(STORAGE_KEYS.QURAN)) || defaultQuran;
+    let completedSessions = parseInt(localStorage.getItem(STORAGE_KEYS.SESSIONS)) || 0;
+    let currentTaskFilter = 'Toutes';
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(tasks));
+      localStorage.setItem(STORAGE_KEYS.HABITS, JSON.stringify(habits));
+      localStorage.setItem(STORAGE_KEYS.STUDY, JSON.stringify(studyItems));
+      localStorage.setItem(STORAGE_KEYS.PRAYERS, JSON.stringify(prayers));
+      localStorage.setItem(STORAGE_KEYS.QURAN, JSON.stringify(quranData));
+      localStorage.setItem(STORAGE_KEYS.SESSIONS, completedSessions.toString());
+      updateGlobalProgress();
+    }
+
+    // ---------------- TOAST NOTIFICATION ----------------
+// ... existing code ... -->
+          <button onclick="deleteHabit(${habit.id})" class="text-slate-300 hover:text-rose-500 p-1 transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // ---------------- PRAYERS & QURAN LOGIC ----------------
+    function togglePrayer(id) {
+      prayers = prayers.map(p => p.id === id ? { ...p, completed: !p.completed } : p);
+      saveData();
+      renderPrayers();
+      const target = prayers.find(p => p.id === id);
+      if (target && target.completed) {
+        showToast(`Prière de ${target.name} validée, Qu'Allah accepte !`, '🦢');
+      }
+    }
+
+    function renderPrayers() {
+      const grid = document.getElementById('prayers-grid');
+      const doneCount = prayers.filter(p => p.completed).length;
+      document.getElementById('prayers-badge').textContent = `${doneCount} / 5 Prières`;
+
+      grid.innerHTML = prayers.map(p => `
+        <button onclick="togglePrayer('${p.id}')" class="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl border transition-all active:scale-95 ${p.completed ? 'bg-gradient-to-b from-blush-400 to-blush-500 text-white border-blush-500 shadow-sm' : 'bg-white/90 text-slate-600 border-blush-200 hover:border-blush-400'}">
+          <span class="text-xs font-bold">${p.name}</span>
+          <span class="mt-1 text-xs">${p.completed ? '✨' : '🌸'}</span>
+        </button>
+      `).join('');
+    }
+
+    function renderQuran() {
+      document.getElementById('quran-sourate').value = quranData.sourate || '';
+      document.getElementById('quran-pages').value = quranData.pages || 0;
+      const btn = document.getElementById('quran-done-btn');
+      if (quranData.completed) {
+        btn.textContent = 'Wird accompli ✨';
+        btn.className = 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all bg-blush-500 text-white border-blush-500 shadow-sm';
+      } else {
+        btn.textContent = 'Marquer lu ✓';
+        btn.className = 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all bg-white text-blush-600 border-blush-200 hover:bg-blush-100';
+      }
+    }
+
+    function updateQuranData() {
+      quranData.sourate = document.getElementById('quran-sourate').value;
+      quranData.pages = Math.max(0, parseInt(document.getElementById('quran-pages').value) || 0);
+      saveData();
+    }
+
+    function adjustQuranPages(delta) {
+      quranData.pages = Math.max(0, (parseInt(quranData.pages) || 0) + delta);
+      saveData();
+      renderQuran();
+    }
+
+    function toggleQuranDone() {
+      quranData.completed = !quranData.completed;
+      saveData();
+      renderQuran();
+      if (quranData.completed) {
+        showToast('Machallah ! Ton wird du Coran est accompli aujourd’hui !', '🌷');
+      }
+    }
+
+    // ---------------- STUDY & REVISION TRACKER LOGIC ----------------
+// ... existing code ... -->
+    // ---------------- GLOBAL PROGRESS & HELPERS ----------------
+    function updateGlobalProgress() {
+      const totalItems = tasks.length + habits.length + prayers.length + 1;
+      const doneItems = tasks.filter(t => t.completed).length + 
+                        habits.filter(h => h.completed).length + 
+                        prayers.filter(p => p.completed).length + 
+                        (quranData.completed ? 1 : 0);
+      const globalPct = totalItems === 0 ? 0 : Math.round((doneItems / totalItems) * 100);
+      document.getElementById('header-progress-text').textContent = `${globalPct}% accompli`;
+    }
+
+    function escapeHTML(str) {
+// ... existing code ... -->
+    // ---------------- INITIALIZATION ----------------
+    window.addEventListener('DOMContentLoaded', () => {
+      initDateAndQuote();
+      updateTimerUI();
+      renderTasks();
+      renderHabits();
+      renderPrayers();
+      renderQuran();
+      renderStudyItems();
+      updateGlobalProgress();
+    });
+  </script>
+</body>
+</html>
